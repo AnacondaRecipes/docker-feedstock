@@ -1,35 +1,44 @@
 {% set name = "docker" %}
-{% set version = "20.10.9" %}
+{% set version = "7.1.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  folder: docker
-  url: https://dockermsft.blob.core.windows.net/dockercontainer/docker-{{ version.replace('.', '-') }}.zip
-  sha256: b854d3a3efc159877f8c7e740268f8c4cfdfa6b746e7b331f39ebd2ec91e259f
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/docker-{{ version }}.tar.gz
+  sha256: ad8c70e6e3f8926cb8a92619b832b4ea5299e2831c14284663184e200546fa6c
 
 build:
+  skip: true  # [py<38]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
-  skip: true  # [not win]
 
 requirements:
+  host:
+    - python >=3.8
+    - hatchling
+    - hatch-vcs
+    - pip
   run:
-    - vs2015_runtime
+    - python >=3.8
+    - requests >=2.26.0
+    - urllib3 >=1.26.0
+    - pywin32-on-windows >=304  # [win]
 
 test:
+  imports:
+    - docker
   commands:
-    - docker --version
+    - pip check
+  requires:
+    - pip
 
 about:
-  home: https://github.com/moby/moby
+  summary: A Python library for the Docker Engine API.
+  dev_url: https://github.com/docker/docker-py
   license: Apache-2.0
-  license_family: Apache
-  license_file: LICENSE.txt
-  summary: Docker Engine - Enterprise enables native Docker containers on Windows Server.
-  doc_url: https://docs.docker.com/ee/docker-ee/windows/docker-ee/
-  dev_url: https://dockermsft.blob.core.windows.net/dockercontainer/DockerMsftIndex.json
+  license_file: LICENSE
 
 extra:
   anaconda-services:
@@ -37,4 +46,3 @@ extra:
     reason: Dependency for pyautogen
   recipe-maintainers:
     - ianaobi
-    - dhirschfeld
