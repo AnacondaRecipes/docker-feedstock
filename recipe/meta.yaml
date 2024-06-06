@@ -32,5 +32,9 @@ about:
   dev_url: https://dockermsft.blob.core.windows.net/dockercontainer/DockerMsftIndex.json
 
 extra:
+  anaconda-services:
+    ref: https://anaconda.zendesk.com/agent/tickets/49522
+    reason: Dependency for pyautogen
   recipe-maintainers:
+    - ianaobi
     - dhirschfeld
